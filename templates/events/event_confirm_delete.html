@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete Event - Utsav Events{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-danger text-white">
+                        <h4 class="mb-0">Delete Event</h4>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-4">Are you sure you want to delete the event "{{ event.name }}"? This action cannot be undone.</p>
+                        
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <a href="{% url 'events:event_detail' event.id %}" class="btn btn-outline-secondary">Cancel</a>
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

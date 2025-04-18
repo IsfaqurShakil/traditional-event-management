@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% block title %}Events - Utsav Events{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <h1 class="fw-bold">Events</h1>
+                <p class="text-muted">Discover and book traditional South Asian events</p>
+            </div>
+            <div class="col-md-4 text-md-end">
+                {% if user.is_authenticated and user.is_organizer or user.is_admin %}
+                    <a href="{% url 'events:event_create' %}" class="btn btn-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg me-1" viewBox="0 0 16 16">
+                            <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z"/>
+                        </svg>
+                        Create Event
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Search and Filter Form -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <form method="get" class="row g-3">
+                    <div class="col-md-4">
+                        {{ form.search.label_tag }}
+                        {{ form.search }}
+                    </div>
+                    <div class="col-md-3">
+                        {{ form.event_type.label_tag }}
+                        {{ form.event_type }}
+                    </div>
+                    <div class="col-md-3">
+                        {{ form.start_date.label_tag }}
+                        {{ form.start_date }}
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary w-100">Search</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Events List -->
+        <div class="row g-4">
+            {% for event in events %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100">
+                        {% if event.image %}
+                            <img src="{{ event.image.url }}" class="card-img-top" alt="{{ event.name }}" style="height: 200px; object-fit: cover;">
+                        {% else %}
+                            <div class="bg-light text-center py-5">
+                                <span class="text-muted">No Image</span>
+                            </div>
+                        {% endif %}
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-primary">{{ event.event_type.name }}</span>
+                                <small class="text-muted">{{ event.start_date|date:"M d, Y" }}</small>
+                            </div>
+                            <h5 class="card-title">{{ event.name }}</h5>
+                            <p class="card-text text-truncate">{{ event.description }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt me-1" viewBox="0 0 16 16">
+                                        <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A31.493 31.493 0 0 1 8 14.58a31.481 31.481 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94zM8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10z"/>
+                                        <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                                    </svg>
+                                    <small>{{ event.venue.name }}</small>
+                                </div>
+                                <a href="{% url 'events:event_detail' event.id %}" class="btn btn-sm btn-outline-primary">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12 text-center py-5">
+                    <p>No events found matching your criteria.</p>
+                    <a href="{% url 'events:event_list' %}" class="btn btn-outline-primary">Clear Filters</a>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Pagination -->
+        {% if events.has_other_pages %}
+            <nav aria-label="Page navigation" class="mt-5">
+                <ul class="pagination justify-content-center">
+                    {% if events.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ events.previous_page_number }}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                    
+                    {% for i in events.paginator.page_range %}
+                        {% if events.number == i %}
+                            <li class="page-item active"><a class="page-link" href="#">{{ i }}</a></li>
+                        {% else %}
+                            <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    {% if events.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ events.next_page_number }}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

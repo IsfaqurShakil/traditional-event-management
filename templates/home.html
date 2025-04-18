@@ -1,0 +1,211 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Utsav Events - South Asian Event Management Platform{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section festive-bg text-white py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">Celebrate Your Special Moments with Utsav Events</h1>
+                <p class="lead mb-4">Your premier platform for planning and managing traditional South Asian events - from weddings and holud ceremonies to cultural programs and more.</p>
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="{% url 'events:event_list' %}" class="btn btn-light btn-lg">Explore Events</a>
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'dashboard' %}" class="btn btn-secondary btn-lg">My Dashboard</a>
+                    {% else %}
+                        <a href="{% url 'register' %}" class="btn btn-secondary btn-lg">Get Started</a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-6 mt-5 mt-lg-0">
+                <img src="{% static 'images/fastiv.jpg' %}" alt="South Asian Wedding Celebration" class="img-fluid rounded-3 shadow-lg">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Events Section -->
+<section class="py-5 pattern-bg">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Featured Events</h2>
+            <p class="text-muted">Discover upcoming celebrations and gatherings</p>
+        </div>
+        
+        <div class="row g-4">
+            {% for event in featured_events %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100">
+                        {% if event.image %}
+                            <img src="{{ event.image.url }}" class="card-img-top" alt="{{ event.name }}" style="height: 200px; object-fit: cover;">
+                        {% else %}
+                            <div class="bg-light text-center py-5">
+                                <span class="text-muted">No Image</span>
+                            </div>
+                        {% endif %}
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-primary">{{ event.event_type.name }}</span>
+                                <small class="text-muted">{{ event.start_date|date:"M d, Y" }}</small>
+                            </div>
+                            <h5 class="card-title">{{ event.name }}</h5>
+                            <p class="card-text text-truncate">{{ event.description }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-primary fw-bold">৳{{ event.price }}</span>
+                                <a href="{% url 'events:event_detail' event.id %}" class="btn btn-sm btn-outline-primary">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12 text-center">
+                    <p>No featured events available at the moment.</p>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-4">
+            <a href="{% url 'events:event_list' %}" class="btn btn-primary">View All Events</a>
+        </div>
+    </div>
+</section>
+
+<!-- Services Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Our Services</h2>
+            <p class="text-muted">Everything you need for your perfect event</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 text-center">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="#E91E63" class="bi bi-calendar-event" viewBox="0 0 16 16">
+                                <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1z"/>
+                                <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+                            </svg>
+                        </div>
+                        <h4 class="card-title">Event Planning</h4>
+                        <p class="card-text">From weddings to cultural programs, we help you plan and organize your special events.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card h-100 text-center">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="#FFC107" class="bi bi-building" viewBox="0 0 16 16">
+                                <path d="M4 2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1ZM4 5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1ZM7.5 5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1ZM4.5 8a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Z"/>
+                                <path d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V1Zm11 0H3v14h3v-2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5V15h3V1Z"/>
+                            </svg>
+                        </div>
+                        <h4 class="card-title">Venue Booking</h4>
+                        <p class="card-text">Find and book the perfect venue for your event with our comprehensive venue listings.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card h-100 text-center">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="#9C27B0" class="bi bi-people" viewBox="0 0 16 16">
+                                <path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1h8Zm-7.978-1A.261.261 0 0 1 7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002a.274.274 0 0 1-.014.002H7.022ZM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM6.936 9.28a5.88 5.88 0 0 0-1.23-.247A7.35 7.35 0 0 0 5 9c-4 0-5 3-5 4 0 .667.333 1 1 1h4.216A2.238 2.238 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816ZM4.92 10A5.493 5.493 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275ZM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0Zm3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4Z"/>
+                            </svg>
+                        </div>
+                        <h4 class="card-title">Vendor Services</h4>
+                        <p class="card-text">Connect with top-rated vendors for catering, decoration, photography, and more.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">What Our Clients Say</h2>
+            <p class="text-muted">Hear from people who have used our platform</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <div class="card border-0 bg-white shadow-sm p-4">
+                                <div class="text-center mb-3">
+                                    <img src="{% static 'images/testimonial-1.jpg' %}" alt="Client" class="rounded-circle" width="80" height="80">
+                                </div>
+                                <div class="text-center">
+                                    <p class="mb-3">"Utsav Events made planning our wedding so much easier. We found the perfect venue and vendors all in one place!"</p>
+                                    <h5 class="mb-0">Priya & Rahul</h5>
+                                    <small class="text-muted">Wedding Ceremony</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="card border-0 bg-white shadow-sm p-4">
+                                <div class="text-center mb-3">
+                                    <img src="{% static 'images/testimonial-2.jpg' %}" alt="Client" class="rounded-circle" width="80" height="80">
+                                </div>
+                                <div class="text-center">
+                                    <p class="mb-3">"The holud ceremony we organized through Utsav Events was a huge success. The decorations and catering were exactly what we wanted!"</p>
+                                    <h5 class="mb-0">Fatima & Ahmed</h5>
+                                    <small class="text-muted">Holud Ceremony</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="card border-0 bg-white shadow-sm p-4">
+                                <div class="text-center mb-3">
+                                    <img src="{% static 'images/testimonial-3.jpg' %}" alt="Client" class="rounded-circle" width="80" height="80">
+                                </div>
+                                <div class="text-center">
+                                    <p class="mb-3">"As an event organizer, Utsav Events has been a game-changer for my business. The platform is intuitive and helps me reach more clients."</p>
+                                    <h5 class="mb-0">Arjun Sharma</h5>
+                                    <small class="text-muted">Event Organizer</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5 festive-bg text-white text-center">
+    <div class="container">
+        <h2 class="fw-bold mb-4">Ready to Plan Your Next Event?</h2>
+        <p class="lead mb-4">Join thousands of users who have successfully planned their events with us.</p>
+        <div class="d-flex justify-content-center gap-3">
+            {% if user.is_authenticated %}
+                <a href="{% url 'events:event_create' %}" class="btn btn-light btn-lg">Create Event</a>
+                <a href="{% url 'dashboard' %}" class="btn btn-outline-light btn-lg">Go to Dashboard</a>
+            {% else %}
+                <a href="{% url 'register' %}" class="btn btn-light btn-lg">Sign Up Now</a>
+                <a href="{% url 'login' %}" class="btn btn-outline-light btn-lg">Login</a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

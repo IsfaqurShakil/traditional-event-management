@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Register - Utsav Events{% endblock %}
+
+{% block content %}
+<section class="py-5 pattern-bg">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">Create an Account</h4>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    {{ form.username|as_crispy_field }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form.email|as_crispy_field }}
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    {{ form.password1|as_crispy_field }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form.password2|as_crispy_field }}
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    {{ form.role|as_crispy_field }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form.phone|as_crispy_field }}
+                                </div>
+                            </div>
+                            
+                            {{ form.address|as_crispy_field }}
+                            {{ form.profile_picture|as_crispy_field }}
+                            
+                            <div class="d-grid gap-2 mt-4">
+                                <button type="submit" class="btn btn-primary">Register</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-footer text-center">
+                        <p class="mb-0">Already have an account? <a href="{% url 'login' %}">Login</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
